@@ -2,124 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NexaShop</title>
-<style>
-body {font-family: Arial; background:#0f172a; color:white; margin:0;}
-header {padding:20px; text-align:center; font-size:28px; background:#1e293b;}
-.products {display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; padding:20px;}
-.product {background:#1e293b; padding:15px; border-radius:10px;}
-button {background:#22c55e; border:none; padding:10px; color:white; cursor:pointer; border-radius:5px;}
-#cart {position:fixed; top:20px; right:20px; background:#22c55e; padding:10px; border-radius:50%; cursor:pointer;}
-#cartPanel {position:fixed; right:0; top:0; width:300px; height:100%; background:#020617; padding:20px; display:none; overflow:auto;}
-input, select {width:100%; padding:10px; margin:5px 0;}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
-<header>NexaShop</header>
-<div id="cart" onclick="toggleCart()">🛒</div>
+<body> 
+
+<header>
+<h1>NexaShop</h1>
+<div onclick="openCart()">🛒</div>
+</header>
+
 <div class="products" id="products"></div>
 
-<div id="cartPanel">
+<!-- CART -->
+<div id="cartBox" class="cart">
 <h2>Cart</h2>
 <div id="cartItems"></div>
-<hr>
+
 <h3>Checkout</h3>
-<input placeholder="Full Name" id="name">
-<input placeholder="Phone Number" id="phone">
+<input id="name" placeholder="Full Name">
+<input id="phone" placeholder="Phone">
 <select id="payment">
-<option>Cash On Delivery</option>
+<option>Cash</option>
 <option>Card</option>
 </select>
-<button onclick="checkout()">Confirm Order</button>
+
+<button onclick="checkout()">Confirm</button>
 </div>
 
-<script>
-let cart = [];
-
-// 50 empty products
-let products = [];
-for(let i=1;i<=50;i++){
-products.push({name:"Product "+i,desc:"Description here",price:0,img:""});
-}
-
-function renderProducts(){
-let container = document.getElementById('products');
-products.forEach((p,i)=>{
-container.innerHTML += `
-<div class="product">
-<img src="${p.img}" width="100%">
-<h3>${p.name}</h3>
-<p>${p.desc}</p>
-<button onclick="addToCart(${i})">Add</button>
-</div>`;
-});
-}
-
-function addToCart(i){
-cart.push(products[i]);
-alert("Added to cart");
-}
-
-function toggleCart(){
-document.getElementById('cartPanel').style.display = 'block';
-renderCart();
-}
-
-function renderCart(){
-let div = document.getElementById('cartItems');
-div.innerHTML = "";
-cart.forEach(c=>{
-div.innerHTML += `<p>${c.name}</p>`;
-});
-}
-
-function checkout(){
-let name = document.getElementById('name').value;
-let phone = document.getElementById('phone').value;
-let payment = document.getElementById('payment').value;
-
-if(!name || !phone){alert("Fill info"); return;}
-
-let orders = JSON.parse(localStorage.getItem('orders')||"[]");
-orders.push({name,phone,payment,cart});
-localStorage.setItem('orders',JSON.stringify(orders));
-
-alert("Order Sent!");
-window.location.href = "admin.html";
-}
-
-renderProducts();
-</script>
-</body>
-</html>
-
-
-<!-- ADMIN PAGE -->
-<!-- Save this as admin.html -->
-<!DOCTYPE html>
-<html>
-<head>
-<title>Orders</title>
-<style>
-body{background:black;color:white;font-family:Arial;padding:20px}
-.order{border:1px solid white;margin:10px;padding:10px}
-</style>
-</head>
-<body>
-<h1>Orders Dashboard</h1>
-<div id="orders"></div>
-<script>
-let orders = JSON.parse(localStorage.getItem('orders')||"[]");
-let div = document.getElementById('orders');
-orders.forEach(o=>{
-div.innerHTML += `<div class='order'>
-<p>Name: ${o.name}</p>
-<p>Phone: ${o.phone}</p>
-<p>Payment: ${o.payment}</p>
-<p>Items: ${o.cart.map(i=>i.name).join(', ')}</p>
-</div>`;
-});
-</script>
+<script src="script.js"></script>
 </body>
 </html>
